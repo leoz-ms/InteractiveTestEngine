@@ -22,8 +22,8 @@ runExecutableWithArgs cmd @("/c", "create_thousand_files.cmd")
 
 log "Start uploading 500 files"
 ack "Please check that the progress bar will keep in the bottom of the output, and update with transfer progress"
-log "AzCopy /Y /DestKey:$AccountKey ./ http://$AccountName.blob.core.windows.net/$randomFolderName/ testfile_*.txt"
-runExecutableWithArgs $AzCopyPath @("/Y","/DestKey:$AccountKey","./","http://$AccountName.blob.core.windows.net/$randomFolderName/","testfile_*.txt")
+log "AzCopy /Y /DestKey:$AccountKey /source:./ /dest:http://$AccountName.blob.core.windows.net/$randomFolderName/ /pattern:testfile_*.txt"
+runExecutableWithArgs $AzCopyPath @("/Y","/DestKey:$AccountKey","/source:./","/dest:http://$AccountName.blob.core.windows.net/$randomFolderName/","/pattern:testfile_*.txt")
 
 if (-not (yesOrNo "The progress bar act right, correct?")) {
 	log "Something wrong with the progress bar."

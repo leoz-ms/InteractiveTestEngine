@@ -23,16 +23,16 @@ runExecutableWithArgs cmd @("/c", "create_thousand_files.cmd")
 log "Start uploading files"
 ack "Please Check if error shows correctly, and progress bar will move to the end of the output from azcopy while AzCopy running"
 log "Uploading files"
-log "AzCopy /Y /DestKey:$AccountKey ./ http://$AccountName.blob.core.windows.net/$randomFolderName/ testfile_*.txt"
-runExecutableWithArgs $AzCopyPath @("/Y","/DestKey:$AccountKey","./","http://$AccountName.blob.core.windows.net/$randomFolderName/","testfile_*.txt")
+log "AzCopy /Y /DestKey:$AccountKey /source:./ /dest:http://$AccountName.blob.core.windows.net/$randomFolderName/ /pattern:testfile_*.txt"
+runExecutableWithArgs $AzCopyPath @("/Y","/DestKey:$AccountKey","/source:./","/dest:http://$AccountName.blob.core.windows.net/$randomFolderName/","/pattern:testfile_*.txt")
 
 log "Change some files to ReadOnly"
 $file = Get-Item "testfile_250.txt"
 $file.IsReadOnly = $true
 
 log "Downloading files"
-log "AzCopy /Y /S /SourceKey:$AccountKey http://$AccountName.blob.core.windows.net/$randomFolderName/ ./ testfile_"
-runExecutableWithArgs $AzCopyPath @("/Y","/S","/SourceKey:$AccountKey","http://$AccountName.blob.core.windows.net/$randomFolderName/","./","testfile_")
+log "AzCopy /Y /S /SourceKey:$AccountKey /source:http://$AccountName.blob.core.windows.net/$randomFolderName/ /dest:./ /pattern:testfile_"
+runExecutableWithArgs $AzCopyPath @("/Y","/S","/SourceKey:$AccountKey","/source:http://$AccountName.blob.core.windows.net/$randomFolderName/","/dest:./","/pattern:testfile_")
 
 if (-not (yesOrNo "The error and the progress bar act right, correct?")) {
 	log "Something wrong with the progress bar while error, and the output mess."

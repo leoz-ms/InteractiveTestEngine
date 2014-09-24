@@ -25,8 +25,8 @@ $randomContentUploadHash = [System.BitConverter]::ToString($md5.ComputeHash($utf
 $randomContentUploadHash | Out-File "testfile_$randomFileNameHash.txt"
 
 log "Uploading random file"
-log "AzCopy /Y /DestKey:$AccountKey ./ http://$AccountName.blob.core.windows.net/$randomFileNameHash/ testfile_$randomFileNameHash.txt"
-runExecutableWithArgs $AzCopyPath @("/Y", "/V:upload.log", "/DestKey:$AccountKey", "./", "http://$AccountName.blob.core.windows.net/$randomFileNameHash/", "testfile_$randomFileNameHash.txt")
+log "AzCopy /Y /DestKey:$AccountKey /source:./ /dest:http://$AccountName.blob.core.windows.net/$randomFileNameHash/ /pattern:testfile_$randomFileNameHash.txt"
+runExecutableWithArgs $AzCopyPath @("/Y", "/V:upload.log", "/DestKey:$AccountKey", "/source:./", "/dest:http://$AccountName.blob.core.windows.net/$randomFileNameHash/", "/pattern:testfile_$randomFileNameHash.txt")
 
 log "Removing and rebuilding local random file for test"
 Remove-Item "testfile_$randomFileNameHash.txt"
@@ -34,8 +34,8 @@ $randomContentLocalHash | Out-File "testfile_$randomFileNameHash.txt"
 
 log "Downloading random file"
 ack "Please Input 'y' to commit overwrite of file"
-log "$AzCopyPath /SourceKey:$AccountKey http://$AccountName.blob.core.windows.net/$randomFileNameHash/ ./ testfile_$randomFileNameHash.txt"
-runExecutableWithArgs $AzCopyPath @("/V:upload.log", "/SourceKey:$AccountKey", "http://$AccountName.blob.core.windows.net/$randomFileNameHash/", "./", "testfile_$randomFileNameHash.txt")
+log "$AzCopyPath /SourceKey:$AccountKey /source:http://$AccountName.blob.core.windows.net/$randomFileNameHash/ /dest:./ /pattern:testfile_$randomFileNameHash.txt"
+runExecutableWithArgs $AzCopyPath @("/V:upload.log", "/SourceKey:$AccountKey", "/source:http://$AccountName.blob.core.windows.net/$randomFileNameHash/", "/dest:./", "/pattern:testfile_$randomFileNameHash.txt")
 
 if (-not (yesOrNo "Please verify the output prompt, does it looks good, not truncate?")) {
 	log "The output mess."
